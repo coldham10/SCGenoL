@@ -58,7 +58,7 @@ class Pileup_file(Iterator):
         self.infile.seek(0)
         return self
 
-    def __next__(self):
+    def next(self):
         # returns the next locus
         line = self.infile.readline()
         line = line.replace('\n','')
@@ -68,9 +68,3 @@ class Pileup_file(Iterator):
         ref_base = line[2]
         sample_specific_data = line[3:]
         return Locus(chrom, coord, ref_base, sample_specific_data)
-
-if __name__ == "__main__":
-    p = Pileup_file()
-    next(p)
-    l = next(p)
-    print(l.first_cell.next_cell.quals)
