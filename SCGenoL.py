@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 
-from pileup import Pileup_file
+from parser import Pileup_file
+
+#recalibrate qualities?  nielsen & SCCaller
+#SFS ('individuals' could be cells)? see nielsen et al 2012 (SNP Calling, Genotype Calling, and Sample Allele...)
+
+# monovar method
 
 
 if __name__ == "__main__":
