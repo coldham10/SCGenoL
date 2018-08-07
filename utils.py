@@ -22,8 +22,6 @@ def clear_indels(cell):
     cleaned = "".join(cleaned)
     cell.reads = cleaned
 
-
-       
 def convert_pileup_notation(cell):
     """ Cleans a cell locus of read start and end markers and
     converts all read information into numerical form"""

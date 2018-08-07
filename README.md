@@ -24,3 +24,6 @@ p(d|g=ra, ado, drop r) = \prod_i p(d_i|g=aa)
 
 ##TODO
 use read quality data
+multiprocessing
+phylogeny EM algorithm
+input pipeline script, creating pileup file and RECALIBRATING base scores
