@@ -64,17 +64,25 @@ class Cell:
         l_no_ado = np.zeros(4)
         for i in range(self.read_depth):
             read = self.reads[i]
-            ls_alt_dropped = [amp_p_mat[ref, ref, b] * seq_p_mat[b, read] for b in bases]
+            ls_homo_ref = [amp_p_mat[ref, ref, b] * seq_p_mat[b, read] for b in bases]
             l_alt_dropped += np.log(sum(ls_alt_dropped))
             for alt in alt_bases:
                 # amp_p_mat is the probability that the intermediate allele is amplified and fed to the sequencer
                 # this already accounts for the reduced likelihood of either allele being chosen compared to the homozygous case
-                ls_nado = [amp_p_mat[alt, ref, b] * seq_p_mat[b, read] for b in bases]
-                l_no_ado[alt] += np.log(sum(ls_read))
+                ls_hetero = [amp_p_mat[alt, ref, b] * seq_p_mat[b, read] for b in bases]
+                l_no_ado[alt] += np.log(sum(ls_hetero))
 
-                ls_ref_dropped = [amp_p_mat[alt, alt, b] * seq_p_mat[b, read] for b in bases]
-                l_ref_dropped[alt] += np.log(sum(
+                ls_homo = [amp_p_mat[alt, alt, b] * seq_p_mat[b, read] for b in bases]
+                l_ref_dropped[alt] += np.log(sum(ls_homo))
 
+        # An allelic dropout of ref or alt are equally likely:
+        l_ref_dropped   = np.add(l_ref_dropped, np.log(0.5))
+        l_alt_dropped  += np.log(0.5)
+        l_ado           = np.logaddexp(l_ref_dropped, l_alt_dropped)
+        l_ado           = np.add(l_ado, np.log(p_ado))
+        l_no_ado        = np.add(l_no_ado, np.log(1-p_ado))
+        l_by_alt        = np.logaddexp(l_ado, l_no_ado)
+        return np.logaddexp.reduce(l_by_alt)
 
 
 class Locus:
@@ -94,6 +102,7 @@ class Locus:
         first = data_bycell.pop(0)
         self.first_cell = Cell(self.ref_base, first[0], first[1], first[2])
         current_cell = self.first_cell
+        #TODO: is this the best way?
         # Create a linked list of cell data at this locus
         for cell in data_bycell:
             next_cell = Cell(self.ref_base, cell[0], cell[1], cell[2])
