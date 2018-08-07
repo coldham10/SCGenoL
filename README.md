@@ -21,3 +21,6 @@ p(d|g=ra, ado) = p(d|g=ra, drop r) * p(drop r) + p(d|g=ra, drop a) * p(drop a)
 Here we assume either allele is equally likely to be dropped in an ado event and p(drop r) = p(drop a) = 0.5. This is unlikely to change
 p(d|g=ra, ado, drop a) = \prod_i p(d_i|g=rr)
 p(d|g=ra, ado, drop r) = \prod_i p(d_i|g=aa)
+
+##TODO
+use read quality data
