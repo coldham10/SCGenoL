@@ -18,7 +18,7 @@ class Pileup_file(Iterator):
         self.infile.seek(0)
         return self
 
-    def next(self):
+    def __next__(self):
         # returns the next locus
         line = self.infile.readline()
         line = line.replace('\n','')

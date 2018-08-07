@@ -3,7 +3,20 @@ read conversion..."""
 
 import re
 
+
+def convert_pileup_notation(cell):
+    """ Cleans a cell locus of read start and end markers and
+    converts all read information into numerical form"""
+    if read_depth == 0:
+        cell.reads = []
+        cell.quals = []
+        return
+
+    clear_indels(cell)
+    reads_to_numeric(cell)
+
 def clear_indels(cell):
+    """Removes indels from the read string of a cell"""
     ins_re = r"(\+[0-9]+)"
     del_re = r"(-[0-9]+)"
     insert_list = re.split(ins_re, cell.reads)
@@ -22,9 +35,9 @@ def clear_indels(cell):
     cleaned = "".join(cleaned)
     cell.reads = cleaned
 
-def convert_pileup_notation(cell):
-    """ Cleans a cell locus of read start and end markers and
-    converts all read information into numerical form"""
+def reads_to_numeric(cell):
+    """Converts the pileup read string to numeric.
+    ACGT -> 0123 respectively"""
     pileup_dict =  {'a': 0,
                     'A': 0,
                     'c': 1,
@@ -35,4 +48,4 @@ def convert_pileup_notation(cell):
                     'T': 3}
     cell.ref_base = pileup_dict[cell.ref_base]
     pileup_dict['.'] = pileup_dict[','] = pileup_dict['*'] = cell.ref_base
-
+    cell.reads = [ pileup_dict[r] for r in cell.reads if r in pileup_dict ]
