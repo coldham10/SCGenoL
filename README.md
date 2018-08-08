@@ -25,4 +25,5 @@ p(d|g=ra, ado, drop r) = \prod_i p(d_i|g=aa)
 ##TODO
 multiprocessing
 phylogeny EM algorithm
-input pipeline script, creating pileup file and RECALIBRATING base scores
+input pipeline script, creating pileup file and RECALIBRATING(?) base scores
+Assumes phred33, maybe include option for phred64

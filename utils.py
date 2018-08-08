@@ -2,18 +2,20 @@
 read conversion..."""
 
 import re
+import numpy as np
 
 
 def convert_pileup_notation(cell):
     """ Cleans a cell locus of read start and end markers and
     converts all read information into numerical form"""
-    if read_depth == 0:
+    if cell.read_depth == 0:
         cell.reads = []
         cell.quals = []
         return
 
     clear_indels(cell)
     reads_to_numeric(cell)
+    decode_quals(cell)
 
 def clear_indels(cell):
     """Removes indels from the read string of a cell"""
@@ -49,3 +51,8 @@ def reads_to_numeric(cell):
     cell.ref_base = pileup_dict[cell.ref_base]
     pileup_dict['.'] = pileup_dict[','] = pileup_dict['*'] = cell.ref_base
     cell.reads = [ pileup_dict[r] for r in cell.reads if r in pileup_dict ]
+
+def decode_quals(cell, qual_offset=33):
+    phred = [ord(q)-qual_offset for q in cell.quals]
+    p_correct = [1-np.exp(-q/10) for q in phred]
+    cell.quals = p_correct
