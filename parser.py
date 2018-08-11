@@ -56,3 +56,7 @@ class Amplification_matrix:
                     j = col % 4
                     self.matrix[i,j,k] = line[col]
             f.close()
+
+class VCF_file:
+    """ Reads VCF file. Can be used to read
+    germline mutations. """

@@ -27,3 +27,5 @@ multiprocessing
 phylogeny EM algorithm
 input pipeline script, creating pileup file and RECALIBRATING(?) base scores
 Assumes phred33, maybe include option for phred64
+handle indels
+EM algorithm with neighbour joining tree
