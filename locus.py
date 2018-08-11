@@ -17,7 +17,7 @@ class Cell:
     def link(self, next_cell):
         self.next_cell = next_cell
 
-    def l_genotype_from_reads(self, g, amp_p_mat, p_ado):
+    def l_genotype_from_SC_reads(self, g, amp_p_mat, p_ado):
         #TODO: test this method
         """Calculates the log likelihood of the read 
         data conditional on the cell genotype being g
@@ -91,10 +91,11 @@ class Locus:
     given locus on the reference, from 
     the pileup file"""
 
-    def __init__(self, chrom, coord, ref_base, pileup_data):
+    def __init__(self, chrom, coord, ref_base, germline_data=None, pileup_data):
         self.chrom = chrom
         self.coord = coord
         self.ref_base = ref_base
+        self.parse_germline_data(germline_data)
         self.parse_cell_data(pileup_data)
         
     def parse_cell_data(self, data):
@@ -106,6 +107,16 @@ class Locus:
         #TODO: is this the best way?
         # Create a linked list of cell data at this locus
         for cell in data_bycell:
-            next_cell = Cell(self.ref_base, cell[0], cell[1], cell[2])
+            next_cell = Cell(self.germ_ref_base, cell[0], cell[1], cell[2])
             current_cell.link(next_cell)
             current_cell = next_cell
+
+    def parse_germline_data(self, data):
+        if data == None:
+            self.germ_ref_base = self.ref_base
+            self.germ_SNV = None
+        else:
+            (alt, g) = data
+            self.germ_ref_base = alt if g == 2 else self.ref_base
+            self.germ_SNV = alt
+

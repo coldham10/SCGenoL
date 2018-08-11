@@ -36,7 +36,7 @@ class Amplification_matrix:
     excludes the effect of allelic dropout"""
 
     def __init__(self, filename=None, fp_error=0):
-        # First two indeces are genotype (symmetric), third is intermediate allele
+        # First two indices are genotype (symmetric), third is intermediate allele
         self.matrix = np.zeros(4,4,4)
         if filename == None:
             for i in range(4):
@@ -60,3 +60,24 @@ class Amplification_matrix:
 class VCF_file:
     """ Reads VCF file. Can be used to read
     germline mutations. """
+
+    def __init__(self, filename=None):
+        if filename:
+            self.infile = open(filename, 'r')
+        else:
+            raise Exception("No VCF filename provided")
+
+    def __iter__(self):
+        self.infile.seek(0)
+        return self
+
+    def __next__(self):
+        # returns the next locus
+        line = self.infile.readline()
+        line = line.replace('\n','')
+        line = line.split('\t')
+        chrom   = line[0]
+        coord   = line[1]
+        ref_base = line[2]
+        sample_specific_data = line[3:]
+        return Locus(chrom, coord, ref_base, sample_specific_data)

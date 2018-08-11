@@ -29,3 +29,4 @@ input pipeline script, creating pileup file and RECALIBRATING(?) base scores
 Assumes phred33, maybe include option for phred64
 handle indels
 EM algorithm with neighbour joining tree
+for germline data, if homozygous update reference(?), if heterozygous include germline_SNV info
