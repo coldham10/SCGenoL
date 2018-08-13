@@ -19,7 +19,6 @@ class Cell:
         self.next_cell = next_cell
 
     def l_genotype_from_SC_reads(self, g, amp_p_mat, p_ado):
-    # TODO: this prints garbage(g=0)
         """Calculates the log likelihood of the read 
         data conditional on the cell genotype being g
         (g = 0,1 or 2 variant alleles) """
@@ -27,25 +26,31 @@ class Cell:
             return self.l_genotype_het(amp_p_mat, p_ado)
         bases = [0,1,2,3]
         ref = self.ref_base
-        alt_bases = [0,1,2,3].remove(ref)
-        print(alt_bases)
+        alt_bases = [0,1,2,3]
+        alt_bases.remove(ref)
         # Likelihoods by underlying genotype.
         # Note that only g=0 specifies a unique genotype
         log_likelihoods = np.zeros(4)
         for i in range(self.read_depth):
             read = self.reads[i]
             qual = self.quals[i]
+            # Probability that intermediate allele g is sequenced as h
             seq_p = lambda g, h : qual if g == h else (1 - qual) /3
             if g == 0:
                 # Summing over intermediate alleles to account for amplification errors
                 ls_read = [amp_p_mat[ref,ref,b] * seq_p(b,read) for b in bases]
-                log_likelihoods[ref] += np.log(sum(ls_read))
+                call_likelihoods = np.zeros(4)
+                call_likelihoods[ref] = sum(ls_read)
+                log_likelihoods += np.log(call_likelihoods)
             elif g == 2:
+                call_likelihoods = np.zeros(4)
                 # Likelihoods calculated for all possible homozygous variant genotypes
                 for alt in alt_bases:
                     # Summing over intermediate alleles to account for amplification errors
                     ls_read = [amp_p_mat[alt, alt, b] * seq_p(b, read) for b in bases]
-                    log_likelihoods[alt] += np.log(sum(ls_read))
+                    call_likelihoods[alt] = sum(ls_read)
+                log_likelihoods += np.log(call_likelihoods)
+        
         return np.logaddexp.reduce(log_likelihoods)
 
 
