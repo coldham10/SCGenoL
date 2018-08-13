@@ -76,7 +76,7 @@ class Cell:
             seq_p = lambda g, h : qual if g == h else (1 - qual) /3
             # Case: alt allele dropped
             ls_homo_ref = [amp_p_mat[ref, ref, b] * seq_p(b, read) for b in bases]
-            l_alt_dropped += np.log(sum(ls_alt_dropped))
+            l_alt_dropped += np.log(sum(ls_homo_ref))
             l_call_ado = np.zeros(4)
             l_call_noado = np.zeros(4)
             for alt in alt_bases:
