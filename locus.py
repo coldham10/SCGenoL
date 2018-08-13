@@ -64,7 +64,8 @@ class Cell:
         
         bases = [0,1,2,3]
         ref = self.ref_base
-        alt_bases = [0,1,2,3].remove(ref)
+        alt_bases = [0,1,2,3]
+        alt_bases.remove(ref)
         # We keep track of the likelihoods for each possible genotype given allelic dropout or not
         l_ref_dropped = np.zeros(4)
         l_alt_dropped = 0
@@ -73,16 +74,20 @@ class Cell:
             read = self.reads[i]
             qual = self.quals[i]
             seq_p = lambda g, h : qual if g == h else (1 - qual) /3
+            # Case: alt allele dropped
             ls_homo_ref = [amp_p_mat[ref, ref, b] * seq_p(b, read) for b in bases]
             l_alt_dropped += np.log(sum(ls_alt_dropped))
+            l_call_ado = np.zeros(4)
+            l_call_noado = np.zeros(4)
             for alt in alt_bases:
-                # amp_p_mat is the probability that the intermediate allele is amplified and fed to the sequencer
-                # this already accounts for the reduced likelihood of either allele being chosen compared to the homozygous case
-                ls_hetero = [amp_p_mat[alt, ref, b] * seq_p(b, read) for b in bases]
-                l_no_ado[alt] += np.log(sum(ls_hetero))
-
+                # Case: ref allele dropped
                 ls_homo = [amp_p_mat[alt, alt, b] * seq_p(b, read) for b in bases]
-                l_ref_dropped[alt] += np.log(sum(ls_homo))
+                l_call_ado[alt] = sum(ls_homo)
+                # Case: no ado event
+                ls_hetero = [amp_p_mat[alt, ref, b] * seq_p(b, read) for b in bases]
+                l_call_noado[alt] = sum(ls_hetero)
+            l_ref_dropped += np.log(l_call_ado)
+            l_no_ado += np.log(l_call_noado)
 
         # An allelic dropout of ref or alt are equally likely:
         l_ref_dropped   = np.add(l_ref_dropped, np.log(0.5))
@@ -102,7 +107,6 @@ class Locus:
     def __init__(self, chrom, coord, ref_base, pileup_data, germline_data=None):
         self.chrom = chrom
         self.coord = coord
-        #TODO: here it is as a letter, not number
         self.ref_base = ref_base
         self.parse_germline_data(germline_data)
         self.parse_cell_data(pileup_data)
