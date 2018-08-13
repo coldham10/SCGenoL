@@ -1,6 +1,7 @@
 import sys
 from locus import Locus
 from collections import Iterator
+import numpy as np
 
 class Pileup_file(Iterator):
     """Class implements an iterator
@@ -37,7 +38,7 @@ class Amplification_matrix:
 
     def __init__(self, filename=None, fp_error=0):
         # First two indices are genotype (symmetric), third is intermediate allele
-        self.matrix = np.zeros(4,4,4)
+        self.matrix = np.zeros((4,4,4))
         if filename == None:
             for i in range(4):
                 for j in range(4):
@@ -48,6 +49,7 @@ class Amplification_matrix:
                             self.matrix[i,j,k] = 0.5 - fp_error/3 if i == k or j == k else fp_error/3
         
         else:
+        #TODO: test this reading ability
             f = open(filename, 'r')
             for k in range(4):
                 line = f.readline().split(',')
@@ -58,6 +60,7 @@ class Amplification_matrix:
             f.close()
 
 class VCF_file:
+    #TODO test this unit
     """ Reads VCF file. Can be used to read
     germline mutations. """
 

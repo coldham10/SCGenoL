@@ -5,20 +5,21 @@ import utils
 
 class Cell:
     """Class holds information about a 
-    particular cell at a particular locus"""
+   particular cell at a particular locus"""
 
     def __init__(self, ref_base, n_reads, reads_string, quals_string):
         self.ref_base = ref_base
-        self.read_depth = n_reads
+        self.read_depth = int(n_reads)
         self.reads = reads_string
         self.quals = quals_string
         utils.convert_pileup_notation(self)
+        self.link(None)
 
     def link(self, next_cell):
         self.next_cell = next_cell
 
     def l_genotype_from_SC_reads(self, g, amp_p_mat, p_ado):
-        #TODO: test this method
+    # TODO: this prints garbage(g=0)
         """Calculates the log likelihood of the read 
         data conditional on the cell genotype being g
         (g = 0,1 or 2 variant alleles) """
@@ -27,6 +28,7 @@ class Cell:
         bases = [0,1,2,3]
         ref = self.ref_base
         alt_bases = [0,1,2,3].remove(ref)
+        print(alt_bases)
         # Likelihoods by underlying genotype.
         # Note that only g=0 specifies a unique genotype
         log_likelihoods = np.zeros(4)
@@ -48,6 +50,7 @@ class Cell:
 
 
     def l_genotype_het(self, amp_p_mat, p_ado):
+    #TODO: test this unit
         """ Calculates the log likelihood of the reads
         at this locus for this cell conditional on the cell
         being heterozygous reference/variant. Note that by
@@ -91,9 +94,10 @@ class Locus:
     given locus on the reference, from 
     the pileup file"""
 
-    def __init__(self, chrom, coord, ref_base, germline_data=None, pileup_data):
+    def __init__(self, chrom, coord, ref_base, pileup_data, germline_data=None):
         self.chrom = chrom
         self.coord = coord
+        #TODO: here it is as a letter, not number
         self.ref_base = ref_base
         self.parse_germline_data(germline_data)
         self.parse_cell_data(pileup_data)
@@ -104,14 +108,13 @@ class Locus:
         first = data_bycell.pop(0)
         self.first_cell = Cell(self.ref_base, first[0], first[1], first[2])
         current_cell = self.first_cell
-        #TODO: is this the best way?
-        # Create a linked list of cell data at this locus
         for cell in data_bycell:
             next_cell = Cell(self.germ_ref_base, cell[0], cell[1], cell[2])
             current_cell.link(next_cell)
             current_cell = next_cell
 
     def parse_germline_data(self, data):
+        #TODO: testing needed
         if data == None:
             self.germ_ref_base = self.ref_base
             self.germ_SNV = None
