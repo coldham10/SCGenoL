@@ -111,11 +111,8 @@ class Locus:
     def parse_cell_data(self, data):
         # Pileup data has three fields per cell
         data_bycell = [(data[3*i], data[3*i+1], data[3*i+2]) for i in range(int(len(data)/3))]
-        first = data_bycell.pop(0)
-        self.first_cell = Cell(self.ref_base, first[0], first[1], first[2])
-        current_cell = self.first_cell
         for cell_data in data_bycell:
-            cell = Cell(self.germ_ref_base, cell[0], cell[1], cell[2])
+            cell = Cell(self.germ_ref_base, cell_data[0], cell[1], cell[2])
             cells.append(cell)
 
 
