@@ -113,7 +113,8 @@ class Locus:
         data_bycell = [(data[3*i], data[3*i+1], data[3*i+2]) for i in range(int(len(data)/3))]
         for cell_data in data_bycell:
             cell = Cell(self.germ_ref_base, cell_data[0], cell[1], cell[2])
-            cells.append(cell)
+            self.cells.append(cell)
+        self.n_cells = len(self.cells)
 
 
     def parse_germline_data(self, data):
