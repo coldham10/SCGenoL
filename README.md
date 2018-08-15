@@ -24,9 +24,9 @@ p(d|g=ra, ado, drop r) = \prod_i p(d_i|g=aa)
 
 ##TODO
 multiprocessing
-phylogeny EM algorithm
 input pipeline script, creating pileup file and RECALIBRATING(?) base scores
 Assumes phred33, maybe include option for phred64
 handle indels
-EM algorithm with neighbour joining tree
+EM algorithm with neighbour joining tree(by hamming distance?): EM params: (ado rate, fp rate(?), SFS(?), amplification probabilities(incl perhaps cytosine deamination parameter)
 for germline data, if homozygous update reference(?), if heterozygous include germline_SNV info
+handle CNVs

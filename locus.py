@@ -13,10 +13,6 @@ class Cell:
         self.reads = reads_string
         self.quals = quals_string
         utils.convert_pileup_notation(self)
-        self.link(None)
-
-    def link(self, next_cell):
-        self.next_cell = next_cell
 
     def l_genotype_from_SC_reads(self, g, amp_p_mat, p_ado):
         """Calculates the log likelihood of the read 
@@ -110,6 +106,7 @@ class Locus:
         self.ref_base = ref_base
         self.parse_germline_data(germline_data)
         self.parse_cell_data(pileup_data)
+        self.cells = []
         
     def parse_cell_data(self, data):
         # Pileup data has three fields per cell
@@ -117,10 +114,10 @@ class Locus:
         first = data_bycell.pop(0)
         self.first_cell = Cell(self.ref_base, first[0], first[1], first[2])
         current_cell = self.first_cell
-        for cell in data_bycell:
-            next_cell = Cell(self.germ_ref_base, cell[0], cell[1], cell[2])
-            current_cell.link(next_cell)
-            current_cell = next_cell
+        for cell_data in data_bycell:
+            cell = Cell(self.germ_ref_base, cell[0], cell[1], cell[2])
+            cells.append(cell)
+
 
     def parse_germline_data(self, data):
         #TODO: testing needed
