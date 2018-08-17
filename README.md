@@ -29,5 +29,5 @@ Assumes phred33, maybe include option for phred64
 handle indels
 EM algorithm with neighbour joining tree(by hamming distance?): EM params: (ado rate, fp rate(?), SFS(?), amplification probabilities(incl perhaps cytosine deamination parameter)
 for germline data, if homozygous update reference(?), if heterozygous include germline_SNV info
-Q: build tree using posterior probabilities?
+Q: build tree using posterior probabilities? update priors in a phylogeny aware way, i.e. use 'parent' as reference?
 handle CNVs

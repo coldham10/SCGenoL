@@ -27,12 +27,8 @@ p(d \,|\, g=ra, \text{ado}, \text{drop r}) &= \prod_i p(d_i \,|\, g=aa)
 Using Bayes' rule:
 \begin{align*}
 p(g=k\,|\, d) &= \frac{p(d\,|\,g=k)\,p(g=k)}{p(d)}\\
+&= \frac{p(d\,|\,g=k)\,\mu^k}{p(d)}\\
 \end{align*}
-For a cell at a given locus $p(d)$ will be constant, therefore instead of finding it we can simply normalise:
-\begin{align*}
-p(g=k\,|\,d) &= \frac{\tilde{p}(g=k\,|\,d)}{\sum_l\tilde{p}(g=l\,|\,d)}\\
-\end{align*}
-
-
+where k is the mutation rate, a learnable parameter. Note: this parameter may be overestimated if the algorithm finds more mutations, increases the rate prior, and so finds more mutations. There may be no reason for this to converge.
 
 \end{document}
