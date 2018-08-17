@@ -18,6 +18,7 @@ class Cell:
         """Calculates the log likelihood of the read 
         data conditional on the cell genotype being g
         (g = 0,1 or 2 variant alleles) """
+        #TODO: if we are imputing the welltype for reference, doesn't g=2 contradict ISM?
         if g == 1:
             return self.l_genotype_het(amp_p_mat, p_ado)
         bases = [0,1,2,3]

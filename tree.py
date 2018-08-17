@@ -26,3 +26,11 @@ class Tree:
         pass
 
     #estimate fp_rate, cyto_deam_rate, CNV_rate, SFS, 
+
+class Node:
+    """A node on the tree consisting of a single cell"""
+    def __init__(self, cell_no, parent):
+        self.cell_no    = cell_no
+        self.parent     = parent
+        self.children   = []
+
