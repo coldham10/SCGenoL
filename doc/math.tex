@@ -4,6 +4,7 @@
 \usepackage{amssymb}
 
 \begin{document}
+
 \section{Genotype Likelihoods from Reads}
 \begin{align*}
 L(g=1) &= p(d\,|\,g=1)\\
@@ -21,4 +22,17 @@ Here we assume either allele is equally likely to be dropped in an ado event and
 p(d \,|\, g=ra, \text{ado}, \text{drop a}) &= \prod_i p(d_i \,|\, g=rr)\\
 p(d \,|\, g=ra, \text{ado}, \text{drop r}) &= \prod_i p(d_i \,|\, g=aa)
 \end{align*}
+
+\section{Cell-locus Posterior probabilities}
+Using Bayes' rule:
+\begin{align*}
+p(g=k\,|\, d) &= \frac{p(d\,|\,g=k)\,p(g=k)}{p(d)}\\
+\end{align*}
+For a cell at a given locus $p(d)$ will be constant, therefore instead of finding it we can simply normalise:
+\begin{align*}
+p(g=k\,|\,d) &= \frac{\tilde{p}(g=k\,|\,d)}{\sum_l}\tilde{p}(g=l\,|\,d)\\
+\end{align*}
+
+
+
 \end{document}
