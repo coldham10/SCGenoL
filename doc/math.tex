@@ -12,7 +12,8 @@ L(g=1) &= p(d\,|\,g=1)\\
 \end{align*}
 Here we do not favour any heterozygous genotype, and all have likelihood $1/3$. This may be changed to reflect empirical or dbSNP data
 \begin{align*}
-L(g=1) &= 1/3 \sum_a p(d \,|\, g=ra, \text{ado}) \times p(\text{ado}) + p(d \,|\, g=ra, \text{no ado})(1-p(\text{ado}))\\
+L(g=1) &= 1/3 \sum_a p(d \,|\, g=ra)\\
+&= 1/3 \sum_a p(d \,|\, g=ra, \text{ado}) \times p(\text{ado}) + p(d \,|\, g=ra, \text{no ado})(1-p(\text{ado}))\\
 p(d|g=ra, ado) &= p(d|g=ra, drop r) * p(drop r) + p(d|g=ra, drop a) * p(drop a)
 \end{align*}
 Here we assume either allele is equally likely to be dropped in an ado event and $p(\text{drop r}) = p(\text{drop a}) = 0.5$. This is unlikely to change.
