@@ -128,3 +128,5 @@ class Locus:
             self.germ_ref_base = alt if g == 2 else self.ref_base
             self.germ_SNV = alt
 
+
+    def calculate_posteriors(self):
