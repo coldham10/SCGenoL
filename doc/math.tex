@@ -36,5 +36,9 @@ Since $p(d)$ is the same for all values of $k$ at a cell-locus, we do not need t
 The Hamming distance between two sequences $s,p$ both length $n$ is given by \[\sum\limits_i^n (1-\delta_{s_ip_i})\] where $\delta_{ab}$ is the Kronecker delta.
 Since we have a probabilistic tree, we use a similar metric but weighted by the posterior probabilities of the genotypes at each locus:
 \[\sum\limits_i^n \sum\limits_{(a,b)\in\{0,1\}\times\{0,1\}}(1-\delta_{ab})p(s_ip_i = ab)\]
+Since $(1-\delta_{ab})$ vanishes when $s_i = p_i$, the distance reduces to
+\[\sum\limits_i^n p(s_i = 0\,,\,p_i=1)+p(s_i=1\,,\,p_i=0)\]
+If we assume independce (TODO) we have
+\[D_{s,p} = \sum\limits_i^n p(s_i = 0)p(p_i=1)+p(s_i=1)p(p_i=0)\]
 
 \end{document}
