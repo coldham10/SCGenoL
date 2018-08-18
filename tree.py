@@ -13,9 +13,18 @@ class Tree:
         self.tree()
 
     def hamming_dist(self):
-        #TODO
-        # Is hamming distance correct for a probabilistic tree? weighted by likelihoods?
-        pass
+        # Is hamming distance correct for a probabilistic tree? weighted by posterior probabilities?
+        for locus in loci:
+            for i in range(self.n_cells):
+                for j in range(i, self.n_cells):
+                    # infinite sites, considering only g=0 or g=1
+                    p01 = locus.cells[i].log_probs[0] + locus.cells[j].log_probs[1]
+                    p10 = locus.cells[i].log_probs[1] + locus.cells[j].log_probs[0]
+                    locus_dist = np.logaddexp(p01, p10)
+                    prev_dist = self.dist_matrix[i,j]
+                    dist = np.logaddexp(prev_dist, locus_dist)
+                    self.dist_matrix[i,j] = dist
+                    self.dist_matrix[j,i] = dist
 
     def tree(self):
         #TODO
