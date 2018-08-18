@@ -30,7 +30,11 @@ p(g=k\,|\, d) &= \frac{p(d\,|\,g=k)\,p(g=k)}{p(d)}\\
 &= \frac{p(d\,|\,g=k)\,\mu^k\,(1-\mu)^{2-k}}{p(d)}\\
 \end{align*}
 where k is the mutation rate, a learnable parameter. Note: this parameter may be overestimated if the algorithm finds more mutations, increases the rate prior, and so finds more mutations. There may be no reason for this to converge.\\
-
 Since $p(d)$ is the same for all values of $k$ at a cell-locus, we do not need to find it and can simply normalise.
+
+\section{Probabilistic Hamming distance}
+The Hamming distance between two sequences $s,p$ both length $n$ is given by \[\sum\limits_i^n (1-\delta_{s_ip_i})\] where $\delta_{ab}$ is the Kronecker delta.
+Since we have a probabilistic tree, we use a similar metric but weighted by the posterior probabilities of the genotypes at each locus:
+\[\sum\limits_i^n \sum\limits_{(a,b)\in\{0,1\}\times\{0,1\}}(1-\delta_{ab})p(s_ip_i = ab)\]
 
 \end{document}
