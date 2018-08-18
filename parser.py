@@ -16,18 +16,22 @@ class Pileup_file(Iterator):
             self.infile = sys.stdin
 
     def __iter__(self):
+        #TODO: possibly unpredictable behaviour with stdin
         self.infile.seek(0)
         return self
 
     def __next__(self):
         # returns the next locus
-        line = self.infile.readline()
-        line = line.replace('\n','')
-        line = line.split('\t')
-        chrom   = line[0]
-        coord   = line[1]
-        ref_base = line[2]
-        sample_specific_data = line[3:]
+        try:
+            line = self.infile.readline()
+            line = line.replace('\n','')
+            line = line.split('\t')
+            chrom   = line[0]
+            coord   = line[1]
+            ref_base = line[2]
+            sample_specific_data = line[3:]
+        except IndexError:
+            raise StopIteration
         return Locus(chrom, coord, ref_base, sample_specific_data)
 
 class Amplification_matrix:

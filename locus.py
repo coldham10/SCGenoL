@@ -95,9 +95,10 @@ class Cell:
         return np.logaddexp.reduce(l_by_alt)
 
     def calculate_naive_posteriors(self, amp_p_mat, p_ado, mu):
-    #TODO: test
-        self.log_probs = np.matrix([self.l_genotype_from_SC_reads(i, amp_p_mat, p_ado) + i*np.log(mu) for i in range(3)])
-        log_total = np.logaddexp.reduce(self.log_probs)
+        #naive prior is mutation rate binomial
+        self.log_probs = np.matrix([self.l_genotype_from_SC_reads(i, amp_p_mat, p_ado) + i*np.log(mu) + (2-i)*np.log(1-mu) for i in range(3)])
+        log_total = np.logaddexp.reduce(self.log_probs, axis=1)
+        self.log_probs -= log_total
         
 
 

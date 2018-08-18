@@ -4,15 +4,23 @@ read conversion..."""
 import re
 import numpy as np
 
+base_dict =  {'a': 0,
+              'A': 0,
+              'c': 1,
+              'C': 1,
+              'g': 2,
+              'G': 2,
+              't': 3,
+              'T': 3}
 
 def convert_pileup_notation(cell):
     """ Cleans a cell locus of read start and end markers and
     converts all read information into numerical form"""
+    cell.ref_base = base_dict[cell.ref_base]
     if cell.read_depth == 0:
         cell.reads = []
         cell.quals = []
         return
-
     clear_indels(cell)
     reads_to_numeric(cell)
     decode_quals(cell)
@@ -40,15 +48,7 @@ def clear_indels(cell):
 def reads_to_numeric(cell):
     """Converts the pileup read string to numeric.
     ACGT -> 0123 respectively"""
-    pileup_dict =  {'a': 0,
-                    'A': 0,
-                    'c': 1,
-                    'C': 1,
-                    'g': 2,
-                    'G': 2,
-                    't': 3,
-                    'T': 3}
-    cell.ref_base = pileup_dict[cell.ref_base]
+    pileup_dict =  base_dict.copy()
     pileup_dict['.'] = pileup_dict[','] = pileup_dict['*'] = cell.ref_base
     cell.reads = [ pileup_dict[r] for r in cell.reads if r in pileup_dict ]
 
