@@ -29,6 +29,8 @@ Using Bayes' rule:
 p(g=k\,|\, d) &= \frac{p(d\,|\,g=k)\,p(g=k)}{p(d)}\\
 &= \frac{p(d\,|\,g=k)\,\mu^k}{p(d)}\\
 \end{align*}
-where k is the mutation rate, a learnable parameter. Note: this parameter may be overestimated if the algorithm finds more mutations, increases the rate prior, and so finds more mutations. There may be no reason for this to converge.
+where k is the mutation rate, a learnable parameter. Note: this parameter may be overestimated if the algorithm finds more mutations, increases the rate prior, and so finds more mutations. There may be no reason for this to converge.\\
+
+Since $p(d)$ is the same for all values of $k$ at a cell-locus, we do not need to find it and can simply normalise.
 
 \end{document}

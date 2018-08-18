@@ -94,7 +94,11 @@ class Cell:
         l_by_alt        = np.logaddexp(l_ado, l_no_ado)
         return np.logaddexp.reduce(l_by_alt)
 
-    def calculate_naive_posterior(se
+    def calculate_naive_posteriors(self, amp_p_mat, p_ado, mu):
+    #TODO: test
+        self.log_probs = np.matrix([self.l_genotype_from_SC_reads(i, amp_p_mat, p_ado) + i*np.log(mu) for i in range(3)])
+        log_total = np.logaddexp.reduce(self.log_probs)
+        
 
 
 class Locus:
@@ -106,15 +110,15 @@ class Locus:
         self.chrom = chrom
         self.coord = coord
         self.ref_base = ref_base
+        self.cells = []
         self.parse_germline_data(germline_data)
         self.parse_cell_data(pileup_data)
-        self.cells = []
         
     def parse_cell_data(self, data):
         # Pileup data has three fields per cell
         data_bycell = [(data[3*i], data[3*i+1], data[3*i+2]) for i in range(int(len(data)/3))]
         for cell_data in data_bycell:
-            cell = Cell(self.germ_ref_base, cell_data[0], cell[1], cell[2])
+            cell = Cell(self.germ_ref_base, cell_data[0], cell_data[1], cell_data[2])
             self.cells.append(cell)
         self.n_cells = len(self.cells)
 
