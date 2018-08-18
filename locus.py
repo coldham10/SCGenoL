@@ -99,6 +99,7 @@ class Cell:
         self.log_probs = np.matrix([self.l_genotype_from_SC_reads(i, amp_p_mat, p_ado) + i*np.log(mu) + (2-i)*np.log(1-mu) for i in range(3)])
         log_total = np.logaddexp.reduce(self.log_probs, axis=1)
         self.log_probs -= log_total
+        self.log_probs = [self.log_probs[0,i] for i in range(3)]
         
 
 
@@ -114,6 +115,7 @@ class Locus:
         self.cells = []
         self.parse_germline_data(germline_data)
         self.parse_cell_data(pileup_data)
+        self.n_cells = len(self.cells)
         
     def parse_cell_data(self, data):
         # Pileup data has three fields per cell
@@ -121,7 +123,6 @@ class Locus:
         for cell_data in data_bycell:
             cell = Cell(self.germ_ref_base, cell_data[0], cell_data[1], cell_data[2])
             self.cells.append(cell)
-        self.n_cells = len(self.cells)
 
 
     def parse_germline_data(self, data):

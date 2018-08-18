@@ -7,14 +7,14 @@ class Tree:
     def __init__(self, loci, ado_rate): #fp_rate, cyto_deam_rate):
         self.prior_ado_rate = ado_rate
         self.loci           = loci
-        self.n_cells        = len(loci[0].n_cells)
-        self.dist_matrix    = np.zeros(self.n_cells, self.n_cells)
+        self.n_cells        = loci[0].n_cells
+        self.dist_matrix    = np.zeros((self.n_cells, self.n_cells))
         self.hamming_dist()
         self.tree()
 
     def hamming_dist(self):
         # Is hamming distance correct for a probabilistic tree? weighted by posterior probabilities?
-        for locus in loci:
+        for locus in self.loci:
             for i in range(self.n_cells):
                 for j in range(i, self.n_cells):
                     # infinite sites, considering only g=0 or g=1
