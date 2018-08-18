@@ -52,7 +52,6 @@ class Cell:
 
 
     def l_genotype_het(self, amp_p_mat, p_ado):
-    #TODO: test this unit
         """ Calculates the log likelihood of the reads
         at this locus for this cell conditional on the cell
         being heterozygous reference/variant. Note that by
@@ -95,6 +94,8 @@ class Cell:
         l_by_alt        = np.logaddexp(l_ado, l_no_ado)
         return np.logaddexp.reduce(l_by_alt)
 
+    def calculate_naive_posterior(se
+
 
 class Locus:
     """Class holds all information for a
@@ -127,6 +128,3 @@ class Locus:
             (alt, g) = data
             self.germ_ref_base = alt if g == 2 else self.ref_base
             self.germ_SNV = alt
-
-
-    def calculate_posteriors(self):

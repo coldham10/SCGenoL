@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.8.17)  17 AUG 2018 16:09
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2018.8.17)  18 AUG 2018 14:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -120,8 +120,7 @@ Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 \symAMSb=\mathgroup5
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
-))
-No file math.aux.
+)) (./math.aux)
 \openout1 = `math.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 6.
@@ -136,6 +135,7 @@ LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 6.
 LaTeX Font Info:    ... okay on input line 6.
 LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 6.
 LaTeX Font Info:    ... okay on input line 6.
+
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -183,8 +183,8 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 {/usr/share/texlive/texmf-dist/fonts/map/pdftex/updmap/pdftex.map}] (./math.aux
 ) ) 
 Here is how much of TeX's memory you used:
- 1618 strings out of 494923
- 19928 string characters out of 6180676
+ 1620 strings out of 494923
+ 19946 string characters out of 6180676
  79444 words of memory out of 5000000
  4965 multiletter control sequences out of 15000+600000
  5944 words of font info for 24 fonts, out of 8000000 for 9000
