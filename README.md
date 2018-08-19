@@ -24,6 +24,7 @@ p(d|g=ra, ado, drop r) = \prod_i p(d_i|g=aa)
 
 ##TODO
 multiprocessing
+convert all matrices to the more standard array type
 input pipeline script, creating pileup file and RECALIBRATING(?) base scores
 Assumes phred33, maybe include option for phred64
 handle indels
