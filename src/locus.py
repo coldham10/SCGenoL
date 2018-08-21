@@ -1,3 +1,21 @@
+"""Data objects and methods refering to the data at a single locus.
+
+Classes: Locus, Cell
+
+The Locus object represents a locus on the reference genome, and across
+all cell samples. It contains a list of Cell objects, each one of which
+represents the data of a single cell at that single locus. The reason 
+for this heirarchy (multiple Cells per Locus rather than multiple loci
+per cell) is that all loci are assumed to be completely independent, 
+whereas the data from multiple cells at a given locus can be considered
+together, for example when inferring the allele frequency at a site.
+
+The Cell class contains probabilistic methods that operate on read data
+for that cell-locus, such as computing log likelihoods and posterior
+probabilities."""
+
+__author__ = "C. F. Oldham"
+
 import sys
 from collections import Iterator
 import numpy as np
@@ -18,7 +36,7 @@ class Cell:
         on the cell genotype being g (g = 0,1 or 2 variant alleles) """
         #TODO: if we are imputing the welltype for reference, doesn't g=2 contradict ISM?
         if g == 1:
-            return self.l_genotype_het(amp_p_mat, p_ado)
+            return self._l_genotype_het(amp_p_mat, p_ado)
         bases = [0,1,2,3]
         ref = self.ref_base
         alt_bases = [0,1,2,3]
@@ -30,7 +48,7 @@ class Cell:
             read = self.reads[i]
             qual = self.quals[i]
             # Probability that intermediate allele g is sequenced as h
-            seq_p = lambda g, h : qual if g == h else (1 - qual) /3
+            def seq_p(g,h): return qual if g == h else (1 - qual) /3
             if g == 0:
                 # Summing over intermediate alleles to account for amplification errors
                 ls_read = [amp_p_mat[ref,ref,b]
@@ -51,7 +69,7 @@ class Cell:
         return np.logaddexp.reduce(log_likelihoods)
 
 
-    def l_genotype_het(self, amp_p_mat, p_ado):
+    def _l_genotype_het(self, amp_p_mat, p_ado):
         """ Calculates the log likelihood of the reads at this locus 
         for this cell conditional on the cell being heterozygous 
         reference/variant. Note that by the infinite sites model the 
@@ -68,7 +86,7 @@ class Cell:
         for i in range(self.read_depth):
             read = self.reads[i]
             qual = self.quals[i]
-            seq_p = lambda g, h : qual if g == h else (1 - qual) /3
+            def seq_p(g,h): return qual if g == h else (1 - qual) /3
             # Case: alt allele dropped
             ls_homo_ref = [amp_p_mat[ref, ref, b] 
                            * seq_p(b, read) for b in bases]
@@ -98,7 +116,7 @@ class Cell:
 
     def calculate_naive_posteriors(self, amp_p_mat, p_ado, f0):
         #Hardy Weinberg:
-        prior = lambda g : g*np.log(f0)
+        def prior(g): return g*np.log(f0)
                            + (2-g)*np.log(1-f0)
                            + (np.log(2) if g==1 else 0)
         self.log_probs = np.array(
@@ -119,10 +137,10 @@ class Locus:
         self.ref_base = ref_base
         self.cells = []
         self.parse_germline_data(germ_data)
-        self.parse_cell_data(pileup_data)
+        self._parse_cell_data(pileup_data)
         self.n_cells = len(self.cells)
         
-    def parse_cell_data(self, data):
+    def _parse_cell_data(self, data):
         # Pileup data has three fields per cell
         data_bycell = [(data[3*i], data[3*i+1], data[3*i+2])
                         for i in range(int(len(data)/3))]
