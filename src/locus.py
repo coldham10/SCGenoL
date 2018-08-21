@@ -4,9 +4,8 @@ import numpy as np
 import utils
 
 class Cell:
-    """Class holds information about a 
-   particular cell at a particular locus"""
-
+    """ Class holds information about a particular cell at a particular 
+    locus"""
     def __init__(self, ref_base, n_reads, reads_string, quals_string):
         self.ref_base = ref_base
         self.read_depth = int(n_reads)
@@ -15,9 +14,8 @@ class Cell:
         utils.convert_pileup_notation(self)
 
     def l_genotype_from_SC_reads(self, g, amp_p_mat, p_ado):
-        """Calculates the log likelihood of the read 
-        data conditional on the cell genotype being g
-        (g = 0,1 or 2 variant alleles) """
+        """Calculates the log likelihood of the read data conditional 
+        on the cell genotype being g (g = 0,1 or 2 variant alleles) """
         #TODO: if we are imputing the welltype for reference, doesn't g=2 contradict ISM?
         if g == 1:
             return self.l_genotype_het(amp_p_mat, p_ado)
@@ -35,7 +33,8 @@ class Cell:
             seq_p = lambda g, h : qual if g == h else (1 - qual) /3
             if g == 0:
                 # Summing over intermediate alleles to account for amplification errors
-                ls_read = [amp_p_mat[ref,ref,b] * seq_p(b,read) for b in bases]
+                ls_read = [amp_p_mat[ref,ref,b]
+                           * seq_p(b,read) for b in bases]
                 call_likelihoods = np.zeros(4)
                 call_likelihoods[ref] = sum(ls_read)
                 log_likelihoods += np.log(call_likelihoods)
@@ -44,7 +43,8 @@ class Cell:
                 # Likelihoods calculated for all possible homozygous variant genotypes
                 for alt in alt_bases:
                     # Summing over intermediate alleles to account for amplification errors
-                    ls_read = [amp_p_mat[alt, alt, b] * seq_p(b, read) for b in bases]
+                    ls_read = [amp_p_mat[alt, alt, b] 
+                               * seq_p(b, read) for b in bases]
                     call_likelihoods[alt] = sum(ls_read)
                 log_likelihoods += np.log(call_likelihoods)
         
@@ -52,11 +52,10 @@ class Cell:
 
 
     def l_genotype_het(self, amp_p_mat, p_ado):
-        """ Calculates the log likelihood of the reads
-        at this locus for this cell conditional on the cell
-        being heterozygous reference/variant. Note that by
-        the infinite sites model the heterozygous variant/variant
-        case is ignored """
+        """ Calculates the log likelihood of the reads at this locus 
+        for this cell conditional on the cell being heterozygous 
+        reference/variant. Note that by the infinite sites model the 
+        heterozygous variant/variant case is ignored """
         
         bases = [0,1,2,3]
         ref = self.ref_base
@@ -71,16 +70,19 @@ class Cell:
             qual = self.quals[i]
             seq_p = lambda g, h : qual if g == h else (1 - qual) /3
             # Case: alt allele dropped
-            ls_homo_ref = [amp_p_mat[ref, ref, b] * seq_p(b, read) for b in bases]
+            ls_homo_ref = [amp_p_mat[ref, ref, b] 
+                           * seq_p(b, read) for b in bases]
             l_alt_dropped += np.log(sum(ls_homo_ref))
             l_call_ado = np.zeros(4)
             l_call_noado = np.zeros(4)
             for alt in alt_bases:
                 # Case: ref allele dropped
-                ls_homo = [amp_p_mat[alt, alt, b] * seq_p(b, read) for b in bases]
+                ls_homo = [amp_p_mat[alt, alt, b] 
+                           * seq_p(b, read) for b in bases]
                 l_call_ado[alt] = sum(ls_homo)
                 # Case: no ado event
-                ls_hetero = [amp_p_mat[alt, ref, b] * seq_p(b, read) for b in bases]
+                ls_hetero = [amp_p_mat[alt, ref, b] 
+                             * seq_p(b, read) for b in bases]
                 l_call_noado[alt] = sum(ls_hetero)
             l_ref_dropped += np.log(l_call_ado)
             l_no_ado += np.log(l_call_noado)
@@ -96,32 +98,39 @@ class Cell:
 
     def calculate_naive_posteriors(self, amp_p_mat, p_ado, f0):
         #Hardy Weinberg:
-        prior = lambda g : g*np.log(f0) + (2-g)*np.log(1-f0) + (np.log(2) if g==1 else 0)
-        self.log_probs = np.array([self.l_genotype_from_SC_reads(i, amp_p_mat, p_ado) + prior(i)  for i in range(3)])
+        prior = lambda g : g*np.log(f0)
+                           + (2-g)*np.log(1-f0)
+                           + (np.log(2) if g==1 else 0)
+        self.log_probs = np.array(
+                         [self.l_genotype_from_SC_reads(i, amp_p_mat, p_ado) 
+                         + prior(i)  for i in range(3)])
         log_total = np.logaddexp.reduce(self.log_probs, axis=1)
         self.log_probs -= log_total
         self.log_probs = [self.log_probs[0,i] for i in range(3)]
         
 
 class Locus:
-    """Class holds all information for a
-    given locus on the reference, from 
-    the pileup file"""
+    """Class holds all information for a given locus on the reference, 
+    from the pileup file"""
 
-    def __init__(self, chrom, coord, ref_base, pileup_data, germline_data=None):
+    def __init__(self, chrom, coord, ref_base, pileup_data, germ_data=None):
         self.chrom = chrom
         self.coord = coord
         self.ref_base = ref_base
         self.cells = []
-        self.parse_germline_data(germline_data)
+        self.parse_germline_data(germ_data)
         self.parse_cell_data(pileup_data)
         self.n_cells = len(self.cells)
         
     def parse_cell_data(self, data):
         # Pileup data has three fields per cell
-        data_bycell = [(data[3*i], data[3*i+1], data[3*i+2]) for i in range(int(len(data)/3))]
+        data_bycell = [(data[3*i], data[3*i+1], data[3*i+2])
+                        for i in range(int(len(data)/3))]
         for cell_data in data_bycell:
-            cell = Cell(self.germ_ref_base, cell_data[0], cell_data[1], cell_data[2])
+            cell = Cell(self.germ_ref_base,
+                        cell_data[0],
+                        cell_data[1],
+                        cell_data[2])
             self.cells.append(cell)
 
 
