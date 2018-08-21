@@ -105,6 +105,22 @@ class Tree:
                     q[i,j] = q[j,i] = qval
         return q
 
+    def _link_neighbours(self, node, n1, n2):
+        """Links the newly created 'node' with the two neighbours that
+        joined to form it"""
+        node.neighbours.append(n1)
+        node.neighbours.append(n2)
+        n1.neighbours.append(node)
+        n2.neighbours.append(node)
+
+    def _deactivate(self, active_list, dists, indices):
+        """Removes nodes given in indices from the list of active 
+        nodes, as well as pruning the distance matrix accordingly"""
+        for node in indeces:
+            del active_list[node]
+            np.delete(dists, node, axis=0)
+            np.delete(dists, node, axis=1)
+
     def _new_node_dists(self, i1, i2, d1, d2):
         """Returns a list of logged distances between each node and
         the new node created between i1 and i2 given distances from the
@@ -124,31 +140,31 @@ class Tree:
         dists  = np.insert(dists, n, to_add, axis=1)
         return dists
 
-    def _link_neighbours(self, node, n1, n2):
-        """Links the newly created 'node' with the two neighbours that
-        joined to form it"""
-        node.neighbours.append(n1)
-        node.neighbours.append(n2)
-        n1.neighbours.append(node)
-        n2.neighbours.append(node)
-
-    def _deactivate(self, active_list, dists, indices):
-        """Removes nodes given in indices from the list of active 
-        nodes, as well as pruning the distance matrix accordingly"""
-        for node in indeces:
-            del active_list[node]
-            np.delete(dists, node, axis=0)
-            np.delete(dists, node, axis=1)
-
+    def _root_tree(self):
+        """BFS updating unvisited neighbours as children"""
+        queue = []
+        queue.append(self.root)
+        while queue:
+            node = queue.pop(0)
+            children = [n for n in node.neighbours if n.visited is False]
+            for child in children:
+                node.children.append(child)
+                queue.append(child)
+                child.parent  = node
+                child.visited = True
 
     #estimate fp_rate, cyto_deam_rate, CNV_rate, SFS, 
 
+
 class Node:
     """A node on the tree consisting of a single cell"""
+
+    neighbours = []
+    children   = []
+    # For rooting
+    visited = False
+    parent  = None
+
     def __init__(self, is_leaf, cell_no=None):
-        self.neighbours = []
-        self.children   = []
-        self.is_leaf    = leaf
+        self.is_leaf    = is_leaf
         self.cell_no    = cell_no
-        # For rooting
-        self.visited    = False
