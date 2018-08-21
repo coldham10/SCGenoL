@@ -97,7 +97,7 @@ class Cell:
     def calculate_naive_posteriors(self, amp_p_mat, p_ado, f0):
         #Hardy Weinberg:
         prior = lambda g : g*np.log(f0) + (2-g)*np.log(1-f0) + (np.log(2) if g==1 else 0)
-        self.log_probs = np.matrix([self.l_genotype_from_SC_reads(i, amp_p_mat, p_ado) + prior(i)  for i in range(3)])
+        self.log_probs = np.array([self.l_genotype_from_SC_reads(i, amp_p_mat, p_ado) + prior(i)  for i in range(3)])
         log_total = np.logaddexp.reduce(self.log_probs, axis=1)
         self.log_probs -= log_total
         self.log_probs = [self.log_probs[0,i] for i in range(3)]
