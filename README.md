@@ -29,7 +29,8 @@ input pipeline script, creating pileup file and RECALIBRATING(?) base scores
 Assumes phred33, maybe include option for phred64
 handle indels
 handle CNVs
-unify sites assumption: infinite or finite? need to remove g=2 handling. This may not be necessary or warrented.
+handle no reads for a cell-locus, defaults to favouring homozygous reference
+For each site run a quick EM algorithm to obtain f_0 priors
 
 
 EM algorithm with neighbour joining tree(by hamming distance?): EM params: (ado rate, fp rate(?), SFS(?), amplification probabilities(incl perhaps cytosine deamination parameter)

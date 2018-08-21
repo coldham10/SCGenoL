@@ -94,14 +94,14 @@ class Cell:
         l_by_alt        = np.logaddexp(l_ado, l_no_ado)
         return np.logaddexp.reduce(l_by_alt)
 
-    def calculate_naive_posteriors(self, amp_p_mat, p_ado, mu):
-        #naive prior is mutation rate binomial
-        self.log_probs = np.matrix([self.l_genotype_from_SC_reads(i, amp_p_mat, p_ado) + i*np.log(mu) + (2-i)*np.log(1-mu) for i in range(3)])
+    def calculate_naive_posteriors(self, amp_p_mat, p_ado, f0):
+        #Hardy Weinberg:
+        prior = lambda g : g*np.log(f0) + (2-g)*np.log(1-f0) + (np.log(2) if g==1 else 0)
+        self.log_probs = np.matrix([self.l_genotype_from_SC_reads(i, amp_p_mat, p_ado) + prior(i)  for i in range(3)])
         log_total = np.logaddexp.reduce(self.log_probs, axis=1)
         self.log_probs -= log_total
         self.log_probs = [self.log_probs[0,i] for i in range(3)]
         
-
 
 class Locus:
     """Class holds all information for a
@@ -134,3 +134,7 @@ class Locus:
             (alt, g) = data
             self.germ_ref_base = alt if g == 2 else self.ref_base
             self.germ_SNV = alt
+
+    def estimate_f0(self):
+        #TODO: quick EM algorithm
+        pass
