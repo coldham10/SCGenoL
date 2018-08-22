@@ -12,3 +12,6 @@ def test():
     
     t = tree.Tree(loci)
     return t.root
+
+if __name__ == "__main__":
+    print(test())

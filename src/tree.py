@@ -22,7 +22,7 @@ class Tree:
     def __init__(self, loci): #ado_rate, fp_rate, cyto_deam_rate):
         self._loci = loci
         self._n_cells = loci[0].n_cells
-        self._dist_matrix = np.zeros((self._n_cells, self._n_cells))
+        self._dist_matrix = np.full((self._n_cells, self._n_cells), -np.inf)
         self._init_hamming_dists()
         self._tree()
 
@@ -52,11 +52,13 @@ class Tree:
     def _tree(self):
         #TODO test
         distances = self._dist_matrix.copy()
+        print(np.exp(distances))
         active_nodes = []
         self.root = Node(False, cell_no=-1)
         # Root treated as extra sample (pos 0) with heterozygous welltype
         active_nodes.append(self.root)
         distances = self._add_root_dists(distances)
+        print(np.exp(distances))
         for i in range(self._n_cells):
             node = Node(True, cell_no=i)
             active_nodes.append(node)
@@ -77,12 +79,12 @@ class Tree:
 
 
     def _add_root_dists(self, dist_array):
-        """Adds a pseudo-cell of the root to a distance matrix at 
+        """Adds a pseudo-cell of the root to a log-distance matrix at 
         index 0 """
-        dist_array = np.insert(dist_array, 0, 0, axis=0)
-        dist_array = np.insert(dist_array, 0, 0, axis=1)
+        dist_array = np.insert(dist_array, 0, -np.inf, axis=0)
+        dist_array = np.insert(dist_array, 0, -np.inf, axis=1)
         for locus in self._loci:
-            for i in range(self._n_cells):
+            for i in range(1, self._n_cells):
                 p10 = locus.cells[i].log_probs[1] 
                 prev_dist = dist_array[i,0]
                 dist = np.logaddexp(prev_dist, p10)
@@ -91,7 +93,7 @@ class Tree:
         return dist_array
 
     def _calculate_q(self, d):
-        """Calculates the Q matrix used in NJ"""
+        """Calculates the Q matrix used in NJ from log distances"""
         n = d.shape[0]
         q = np.zeros((n,n))
         for i in range(n):
@@ -100,9 +102,9 @@ class Tree:
                     # So argmin of neighbour joining doesn't join the same node
                     q[i,j] = np.inf
                 else:
-                    isum = np.sum(d[i, ...])
-                    jsum = np.sum(d[j, ...])
-                    qval = (n-2)*d[i,j] - isum - jsum
+                    isum = np.sum(np.exp(d[i, ...]))
+                    jsum = np.sum(np.exp(d[j, ...]))
+                    qval = (n-2)*np.exp(d[i,j]) - isum - jsum
                     q[i,j] = q[j,i] = qval
         return q
 
