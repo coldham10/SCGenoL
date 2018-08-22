@@ -52,13 +52,11 @@ class Tree:
     def _tree(self):
         #TODO test
         distances = self._dist_matrix.copy()
-        print(np.exp(distances))
         active_nodes = []
         self.root = Node(False, cell_no=-1)
         # Root treated as extra sample (pos 0) with heterozygous welltype
         active_nodes.append(self.root)
         distances = self._add_root_dists(distances)
-        print(np.exp(distances))
         for i in range(self._n_cells):
             node = Node(True, cell_no=i)
             active_nodes.append(node)
