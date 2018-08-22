@@ -39,8 +39,9 @@ p(g=k) &= \sum\limits_{l'=k}^{2m-2+k} p(g=k \,|\,l=l') \,p(l=l')\\
 &=
 \end{align*}
 \subsection*{Site frequency spectrum}
+Similar to method above except MLE of $l$ is computed at each site and the counts of how many sites have $l=l'$ are recorded. This $2m+1$ long vector is nrmalised to give the Site Frequency Spectrumi(SFS) used as a prior for $l$.
 \subsection*{Phylogeny aware prior}
-As done by Singer et al.. Similar to Zafar et al. except we cosider the number of affected cells, $K$ rather than the number of affected alleles. 
+As done by Singer et al.. Similar to Zafar et al. except we cosider the number of mutated cells, $K$ rather than the number of mutated alleles. 
 This prior includes the probability of a given site containing a mutation ($\lambda$) as well as a distribution of the number of cells affected. For $P(K=0)$ is simply $1-\lambda$. for $K\neq 0 $:
 \[p(K=k) = \lambda\frac{\binom{m}{k}^2}{(2k-1)\binom{2m}{2k}}\]
 
