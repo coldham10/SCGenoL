@@ -35,6 +35,7 @@ class Cell:
         """Calculates the log likelihood of the read data conditional 
         on the cell genotype being g (g = 0,1 or 2 variant alleles) """
         #TODO: if we are imputing the welltype for reference, doesn't g=2 contradict ISM?
+        #TODO: the test.pileup cells 0 & 2 give identical values for these always. Why?
         np.seterr(divide='ignore')
         if g == 1:
             return self._l_genotype_het(amp_p_mat, p_ado)
@@ -126,7 +127,6 @@ class Cell:
                          + prior(i)  for i in range(3)])
         log_total = np.logaddexp.reduce(self.log_probs)
         self.log_probs -= log_total
-        #self.log_probs = [self.log_probs[0,i] for i in range(3)]
         
 
 class Locus:
