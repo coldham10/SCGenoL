@@ -35,6 +35,7 @@ class Cell:
         """Calculates the log likelihood of the read data conditional 
         on the cell genotype being g (g = 0,1 or 2 variant alleles) """
         #TODO: if we are imputing the welltype for reference, doesn't g=2 contradict ISM?
+        np.seterr(divide='ignore')
         if g == 1:
             return self._l_genotype_het(amp_p_mat, p_ado)
         bases = [0,1,2,3]
@@ -66,6 +67,7 @@ class Cell:
                     call_likelihoods[alt] = sum(ls_read)
                 log_likelihoods += np.log(call_likelihoods)
         
+        np.seterr(divide='warn')
         return np.logaddexp.reduce(log_likelihoods)
 
 
@@ -116,15 +118,15 @@ class Cell:
 
     def calculate_naive_posteriors(self, amp_p_mat, p_ado, f0):
         #Hardy Weinberg:
-        def prior(g): return g*np.log(f0)
-                           + (2-g)*np.log(1-f0)
-                           + (np.log(2) if g==1 else 0)
+        def prior(g): return (g*np.log(f0)
+                              + (2-g)*np.log(1-f0)
+                              + (np.log(2) if g==1 else 0))
         self.log_probs = np.array(
                          [self.l_genotype_from_SC_reads(i, amp_p_mat, p_ado) 
                          + prior(i)  for i in range(3)])
-        log_total = np.logaddexp.reduce(self.log_probs, axis=1)
+        log_total = np.logaddexp.reduce(self.log_probs)
         self.log_probs -= log_total
-        self.log_probs = [self.log_probs[0,i] for i in range(3)]
+        #self.log_probs = [self.log_probs[0,i] for i in range(3)]
         
 
 class Locus:

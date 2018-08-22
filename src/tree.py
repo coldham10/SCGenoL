@@ -19,10 +19,10 @@ class Tree:
 
     root = None
 
-    def __init__(self, loci) #ado_rate, fp_rate, cyto_deam_rate):
+    def __init__(self, loci): #ado_rate, fp_rate, cyto_deam_rate):
         self._loci = loci
         self._n_cells = loci[0].n_cells
-        self._dist_matrix = np.zeros((self.n_cells, self.n_cells))
+        self._dist_matrix = np.zeros((self._n_cells, self._n_cells))
         self._init_hamming_dists()
         self._tree()
 
@@ -34,14 +34,14 @@ class Tree:
         """Initializes the log of probabilistic Hamming distances 
         between real cells."""
         for locus in self._loci:
-            for i in range(self._n_cells):
-                for j in range(i, self._n_cells):
+            for i in range(self._n_cells-1):
+                for j in range(i+1, self._n_cells):
                     # TODO: add g=2 to this metric
                     # infinite sites, considering only g=0 or g=1
-                    p01 = locus.cells[i].log_probs[0] 
-                          + locus.cells[j].log_probs[1]
-                    p10 = locus.cells[i].log_probs[1] 
-                          + locus.cells[j].log_probs[0]
+                    p01 = (locus.cells[i].log_probs[0] 
+                           + locus.cells[j].log_probs[1])
+                    p10 = (locus.cells[i].log_probs[1] 
+                           + locus.cells[j].log_probs[0])
                     #TODO: this assumes independence of cells. Justified?
                     locus_dist = np.logaddexp(p01, p10)
                     prev_dist = self._dist_matrix[i,j]
@@ -55,11 +55,11 @@ class Tree:
         active_nodes = []
         self.root = Node(False, cell_no=-1)
         # Root treated as extra sample (pos 0) with heterozygous welltype
-        active_nodes.append(root)
-        self._add_root_dists(distances)
+        active_nodes.append(self.root)
+        distances = self._add_root_dists(distances)
         for i in range(self._n_cells):
             node = Node(True, cell_no=i)
-            active_nodes.append[node]
+            active_nodes.append(node)
         while len(active_nodes) > 2:
             q_mat = self._calculate_q(distances)
             n1, n2 = np.unravel_index(q_mat.argmin(), q_mat.shape)
@@ -67,7 +67,7 @@ class Tree:
             self._link_neighbours(new_node, active_nodes[n1], active_nodes[n2])
             d1 = distances[n1, ...]
             d2 = distances[n2, ...]
-            self._deactivate(active_nodes, distances, [n1, n2])
+            active_nodes, distances = self._deactivate(active_nodes, distances, [n1, n2])
             active_nodes.append(new_node)
             new_dists = self._new_node_dists(n1, n2, d1, d2)
             distances = self._update_dists(distances, new_dists)
@@ -88,6 +88,7 @@ class Tree:
                 dist = np.logaddexp(prev_dist, p10)
                 dist_array[i,0] = dist
                 dist_array[0,i] = dist
+        return dist_array
 
     def _calculate_q(self, d):
         """Calculates the Q matrix used in NJ"""
@@ -116,10 +117,11 @@ class Tree:
     def _deactivate(self, active_list, dists, indices):
         """Removes nodes given in indices from the list of active 
         nodes, as well as pruning the distance matrix accordingly"""
-        for node in indeces:
-            del active_list[node]
-            np.delete(dists, node, axis=0)
-            np.delete(dists, node, axis=1)
+        new_list = [active_list[i] for i in range(len(active_list)) 
+                    if i not in indices]
+        new_dists = np.delete(dists, indices, axis=0)
+        new_dists = np.delete(new_dists, indices, axis=1)
+        return (new_list, new_dists)
 
     def _new_node_dists(self, i1, i2, d1, d2):
         """Returns a list of logged distances between each node and
@@ -129,8 +131,8 @@ class Tree:
         new_dists = []
         for k in range(len(d1)):
             if k != i1 and k != i2:
-                new_dk = np.log(0.5) + np.logaddexp(d1[k], d2[k], -d12)
-                new_dists.append(new_dk)
+                dk = np.log(0.5) + np.logaddexp.reduce((d1[k], d2[k], -d12))
+                new_dists.append(dk)
         return new_dists
 
     def _update_dists(self, dists, to_add):

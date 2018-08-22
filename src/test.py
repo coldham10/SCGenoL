@@ -9,5 +9,5 @@ for locus in pfile:
     for c in locus.cells:
         c.calculate_naive_posteriors(amp_mat.matrix,0.01,0.0001)
 
-t = tree.Tree(loci, 0.01)
-print(t.dist_matrix)
+t = tree.Tree(loci)
+print(t.root)

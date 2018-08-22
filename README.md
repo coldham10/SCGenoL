@@ -24,13 +24,13 @@ p(d|g=ra, ado, drop r) = \prod_i p(d_i|g=aa)
 
 ##TODO
 multiprocessing
-convert all matrices to the more standard array type
 input pipeline script, creating pileup file and RECALIBRATING(?) base scores
 Assumes phred33, maybe include option for phred64
 handle indels
 handle CNVs
 handle no reads for a cell-locus, defaults to favouring homozygous reference
 For each site run a quick EM algorithm to obtain f_0 priors
+For cells with no read depth use site-wise prior as posterior
 
 
 EM algorithm with neighbour joining tree(by hamming distance?): EM params: (ado rate, fp rate(?), SFS(?), amplification probabilities(incl perhaps cytosine deamination parameter)
