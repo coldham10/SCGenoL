@@ -11,7 +11,7 @@ def test():
             c.calculate_naive_posteriors(amp_mat.matrix,0.01,0.0001)
     
     t = tree.Tree(loci)
-    return t.root
+    return (loci, t.root)
 
 if __name__ == "__main__":
     print(test())

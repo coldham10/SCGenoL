@@ -84,12 +84,12 @@ class Tree:
         dist_array = np.insert(dist_array, 0, -np.inf, axis=0)
         dist_array = np.insert(dist_array, 0, -np.inf, axis=1)
         for locus in self._loci:
-            for i in range(1, self._n_cells):
+            for i in range(self._n_cells):
                 p10 = locus.cells[i].log_probs[1] 
-                prev_dist = dist_array[i,0]
+                prev_dist = dist_array[i+1,0]
                 dist = np.logaddexp(prev_dist, p10)
-                dist_array[i,0] = dist
-                dist_array[0,i] = dist
+                dist_array[i+1,0] = dist
+                dist_array[0,i+1] = dist
         return dist_array
 
     def _calculate_q(self, d):

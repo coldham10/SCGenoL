@@ -153,7 +153,6 @@ class Locus:
                         cell_data[2])
             self.cells.append(cell)
 
-
     def parse_germline_data(self, data):
         #TODO: testing needed
         if data == None:
