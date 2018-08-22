@@ -27,10 +27,22 @@ p(d \,|\, g=ra, \text{ado}, \text{drop r}) &= \prod_i p(d_i \,|\, g=aa)
 Using Bayes' rule:
 \begin{align*}
 p(g=k\,|\, d) &= \frac{p(d\,|\,g=k)\,p(g=k)}{p(d)}\\
-&= \frac{p(d\,|\,g=k)\,\mu^k\,(1-\mu)^{2-k}}{p(d)}\\
+&= \frac{p(d\,|\,g=k)\,\binom{2}{k}f_1^k\,(1-f_1)^{2-k}}{p(d)}\\
 \end{align*}
-where k is the mutation rate, a learnable parameter. Note: this parameter may be overestimated if the algorithm finds more mutations, increases the rate prior, and so finds more mutations. There may be no reason for this to converge.\\
-Since $p(d)$ is the same for all values of $k$ at a cell-locus, we do not need to find it and can simply normalise.
+where $f_1$ is the alternate allele frequency at that site. This implies HWE, which may or may not be a valid assumption. Since $p(d)$ is the same for all values of $k$ at a cell-locus, we do not need to find it and can simply normalise.
+\subsection{Priors}
+Above is the current implementation. The alernate allele frequency may be estimated by EM at each site. Other options exist such as:
+\subsubsection*{Marginalizing by site allele count}
+As done by Zafar et al., first probabilities for the number of alternate alleles $l$ at the site are calculated using dynamic programing.\\
+\begin{align*}
+p(g=k) &= \sum\limits_{l'=k}^{2m-2+k} p(g=k \,|\,l=l') \,p(l=l')\\
+&=
+\end{align*}
+\subsection*{Site frequency spectrum}
+\subsection*{Phylogeny aware prior}
+As done by Singer et al.. Similar to Zafar et al. except we cosider the number of affected cells, $K$ rather than the number of affected alleles. 
+This prior includes the probability of a given site containing a mutation ($\lambda$) as well as a distribution of the number of cells affected. For $P(K=0)$ is simply $1-\lambda$. for $K\neq 0 $:
+\[p(K=k) = \lambda\frac{\binom{m}{k}^2}{(2k-1)\binom{2m}{2k}}\]
 
 \section{Probabilistic Hamming distance}
 The Hamming distance between two sequences $s,p$ both length $n$ is given by \[\sum\limits_i^n (1-\delta_{s_ip_i})\] where $\delta_{ab}$ is the Kronecker delta.
