@@ -144,6 +144,7 @@ class Tree:
 
     def _root_tree(self):
         """BFS updating unvisited neighbours as children"""
+        #TODO: somehow each node has far too many neighbours
         queue = []
         queue.append(self.root)
         while queue:
@@ -161,12 +162,11 @@ class Tree:
 class Node:
     """A node on the tree consisting of a single cell"""
 
-    neighbours = []
-    children   = []
-    # For rooting
-    visited = False
-    parent  = None
-
     def __init__(self, is_leaf, cell_no=None):
         self.is_leaf    = is_leaf
         self.cell_no    = cell_no
+        self.neighbours = []
+        self.children   = []
+        # For rooting
+        self.visited = False
+        self.parent  = None
