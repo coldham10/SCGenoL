@@ -147,6 +147,7 @@ class Tree:
         #TODO: somehow each node has far too many neighbours
         queue = []
         queue.append(self.root)
+        self.root.visited = True
         while queue:
             node = queue.pop(0)
             children = [n for n in node.neighbours if n.visited is False]
