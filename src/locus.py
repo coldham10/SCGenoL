@@ -138,7 +138,7 @@ class Locus:
         self.coord = coord
         self.ref_base = ref_base
         self.cells = []
-        self.parse_germline_data(germ_data)
+        self._parse_germline_data(germ_data)
         self._parse_cell_data(pileup_data)
         self.n_cells = len(self.cells)
         
@@ -153,7 +153,7 @@ class Locus:
                         cell_data[2])
             self.cells.append(cell)
 
-    def parse_germline_data(self, data):
+    def _parse_germline_data(self, data):
         #TODO: testing needed
         if data == None:
             self.germ_ref_base = self.ref_base

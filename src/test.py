@@ -2,7 +2,7 @@ import parser
 import numpy as np
 import tree
 def test():
-    pfile = parser.Pileup_file("test2.pileup")
+    pfile = parser.Pileup_file("tmp.pileup")
     amp_mat = parser.Amplification_matrix(fp_error = 0.01)
     loci = []
     for locus in pfile:

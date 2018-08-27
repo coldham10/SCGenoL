@@ -14,6 +14,8 @@ class Pileup_file(Iterator):
             self.infile = open(filename, 'r')
         else:
             self.infile = sys.stdin
+        #TODO: remove, testing
+        self.line = 0
 
     def __iter__(self):
         #TODO: possibly unpredictable behaviour with stdin
@@ -22,6 +24,8 @@ class Pileup_file(Iterator):
 
     def __next__(self):
         # returns the next locus
+        self.line += 1
+        print (self.line)
         try:
             line = self.infile.readline()
             line = line.replace('\n','')
