@@ -27,17 +27,20 @@ def convert_pileup_notation(cell):
     clear_indels(cell)
     reads_to_numeric(cell)
     decode_quals(cell)
-    clear_ambigs(cell)
     if len(cell.reads) != len(cell.quals):
         err_str = "Read qual mismatch. Read length: {0}, Qual length: {1}\n{2}".format(len(cell.reads), len(cell.quals), cell.reads)
         raise RuntimeError(err_str)
+    clear_ambigs(cell)
 
 def clear_ambigs(cell):
     """Removes ambiguous 'N' reads and their quals"""
     n_pos = [i for i in range(len(cell.reads)) if cell.reads[i] < 0]
+    #indices change as we delete elements
+    offset = 0
     for pos in n_pos:
-        del cell.reads[pos]
-        del cell.quals[pos]
+        del cell.reads[pos - offset]
+        del cell.quals[pos - offset]
+        offset += 1
     cell.read_depth = len(cell.reads)
 
 def clear_indels(cell):
