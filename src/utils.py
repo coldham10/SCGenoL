@@ -11,7 +11,9 @@ base_dict =  {'a': 0,
               'g': 2,
               'G': 2,
               't': 3,
-              'T': 3}
+              'T': 3,
+              'n': -1,
+              'N': -1}
 
 def convert_pileup_notation(cell):
     """ Cleans a cell locus of read start and end markers and
@@ -24,8 +26,18 @@ def convert_pileup_notation(cell):
     clear_indels(cell)
     reads_to_numeric(cell)
     decode_quals(cell)
+    clear_ambigs(cell)
+
+def clear_ambigs(cell):
+    """Removes ambiguous 'N' reads and their quals"""
+    n_pos = [i for i in range(len(cell.reads)) if cell.reads[i] < 0]
+    for pos in n_pos:
+        del cell.reads[pos]
+        del cell.quals[pos]
+    cell.read_depth = len(cell.reads)
 
 def clear_indels(cell):
+    #TODO: handle indel quals. (?)
     """Removes indels from the read string of a cell"""
     ins_re = r"(\+[0-9]+)"
     del_re = r"(-[0-9]+)"

@@ -30,6 +30,18 @@ class Tree:
         #TODO
         pass
 
+    def show(self, node=None, depth=0):
+        """In order traversal to print human readable tree form"""
+        if node is None:
+            node = self.root.children[0]
+        if node.is_leaf:
+            print("".join([depth*"   ", "--", str(node.cell_no)]))
+        else:
+            self.show(node.children[0], depth+1)
+            print("".join([depth*"   ", "--<"]))
+            self.show(node.children[1], depth+1)
+
+
     def _init_hamming_dists(self):
         """Initializes the log of probabilistic Hamming distances 
         between real cells."""
