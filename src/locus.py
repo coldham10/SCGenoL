@@ -36,6 +36,11 @@ class Cell:
         on the cell genotype being g (g = 0,1 or 2 variant alleles) """
         #TODO: if we are imputing the welltype for reference, doesn't g=2 contradict ISM?
         #TODO: the test.pileup cells 0 & 2 give identical values for these always. Why?
+
+        #This line results in a prior being returned if no read depth
+        if self.read_depth == 0:
+            return 0
+
         np.seterr(divide='ignore')
         if g == 1:
             return self._l_genotype_het(amp_p_mat, p_ado)
