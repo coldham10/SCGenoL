@@ -20,6 +20,8 @@ def convert_pileup_notation(cell):
     """ Cleans a cell locus of read start and end markers and
     converts all read information into numerical form"""
     cell.ref_base = base_dict[cell.ref_base]
+    if cell.ref_base < 0:
+        cell.read_depth == 0
     if cell.read_depth == 0:
         cell.reads = []
         cell.quals = []
