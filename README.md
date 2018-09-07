@@ -8,7 +8,7 @@ or be calculated by the program where the above values are adjusted by some smal
 seq_p_mat implicitly does the 1/3 calculation in monovar for homozygous likelihoods, by definition.
 
 ##TODO
-multiprocessing
+multiprocessing: write C module for parallelizable, slow methods and implement POSIX threads. Followed tutorial at adam's blog
 input pipeline script, creating pileup file and RECALIBRATING(?) base scores
 Assumes phred33, maybe include option for phred64
 handle indels

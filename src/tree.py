@@ -34,6 +34,7 @@ class Tree:
         """In order traversal to print human readable tree form"""
         if node is None:
             node = self.root.children[0]
+            print(self._dist_matrix)
         if node.is_leaf:
             print("".join([depth*"   ", "--", str(node.cell_no)]))
         else:
