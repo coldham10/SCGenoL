@@ -1,10 +1,9 @@
 #include <Python.h>
+#include <numpy/arrayobject.h>
 
-//Actual module method definition - this is the code that will be called by
-//hello_module.print_hello_world
 static PyObject* accel_module_posteriors(PyObject *self, PyObject *args)
 {
-    printf("Hello World\n");
+    printf("Hello Worldd\n");
     Py_RETURN_NONE;
 }
 
@@ -12,7 +11,7 @@ static PyMethodDef accel_module_methods[] = {
     {   
         "posteriors",
         accel_module_posteriors,
-        METH_NOARGS,
+        METH_VARARGS,
         "Print 'hello world' from a method defined in a C extension."
     },  
     {NULL, NULL, 0, NULL}
