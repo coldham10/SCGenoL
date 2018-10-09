@@ -56,6 +56,7 @@ class Cell:
             qual = self.quals[i]
             # Probability that intermediate allele g is sequenced as h
             def seq_p(g,h): return qual if g == h else (1 - qual) /3
+            # Homozygous reference
             if g == 0:
                 # Summing over intermediate alleles to account for amplification errors
                 ls_read = [amp_p_mat[ref,ref,b]
@@ -74,6 +75,7 @@ class Cell:
                 log_likelihoods += np.log(call_likelihoods)
         
         np.seterr(divide='warn')
+        # If g=2, the likelihod of possible alt alleles are summed
         return np.logaddexp.reduce(log_likelihoods)
 
 
@@ -159,6 +161,7 @@ class Locus:
             self.cells.append(cell)
 
     def _parse_germline_data(self, data):
+        # Imputes a new reference allele if a germline mutation is known.
         #TODO: testing needed
         if data == None:
             self.germ_ref_base = self.ref_base

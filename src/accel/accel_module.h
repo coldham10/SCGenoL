@@ -4,4 +4,6 @@
 #include <Python.h>
 #include <numpy/arrayobject.h>
 
+double HWE_prior(int g, double f_0);
+
 #endif

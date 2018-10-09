@@ -1,7 +1,23 @@
 #include "accel_module.h"
 #include <math.h>
 
-static double HWE_prior(int g, double f_0) {
+
+static PyObject* accel_module_posteriors(PyObject* self, PyObject* args) {
+    //ref_base, read_string, qual_list, amp_p_mat, p_ado, f_0
+    PyObject* arg0=NULL; //, arg1=NULL, arg2=NULL, arg3=NULL, arg4=NULL;
+    char ref_base = '\0';
+    PyObject* amp_p_mat = NULL;
+    if(!PyArg_ParseTuple(args, "BO", &ref_base, &arg0)) return NULL;
+    amp_p_mat = PyArray_FROM_OT(arg0, NPY_DOUBLE);
+    int ndims = PyArray_NDIM(amp_p_mat);
+    printf("%d\n", ndims);
+    printf("%d\n", (int)ref_base);
+    Py_DECREF(amp_p_mat);
+    Py_RETURN_NONE;
+}
+
+
+double HWE_prior(int g, double f_0) {
     //Binomial in log space
     double prior = log(f_0) * g;
     prior += (2-g) * log(1-f_0);
@@ -10,20 +26,6 @@ static double HWE_prior(int g, double f_0) {
     }
     return prior;
 }
-
-static PyObject* accel_module_posteriors(PyObject* self, PyObject* args) {
-    PyObject* arg0 = NULL;
-    PyObject* amp_p_mat = NULL;
-    if(!PyArg_ParseTuple(args, "O", &arg0)) return NULL;
-    amp_p_mat = PyArray_FROM_OT(arg0, NPY_DOUBLE);
-    int ndims = PyArray_NDIM(amp_p_mat);
-    printf("%d\n", ndims);
-    double test_prior = HWE_prior(1, 0.5);
-    printf("%f\n", test_prior);
-    Py_DECREF(amp_p_mat);
-    Py_RETURN_NONE;
-}
-
 
 static PyMethodDef accel_module_methods[] = { 
     {   
