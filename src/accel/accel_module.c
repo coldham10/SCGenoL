@@ -1,15 +1,30 @@
 #include <Python.h>
 #include <numpy/arrayobject.h>
+#include <math.h>
 
-static PyObject* accel_module_posteriors(PyObject *self, PyObject *args) {
+static double HWE_prior(int g, double f_0) {
+    //Binomial in log space
+    double prior = log(f_0) * g;
+    prior += (2-g) * log(1-f_0);
+    if (g == 1) {
+        prior += log(2);
+    }
+    return prior;
+}
+
+static PyObject* accel_module_posteriors(PyObject* self, PyObject* args) {
     PyObject* arg0 = NULL;
-    PyObject* array = NULL;
+    PyObject* amp_p_mat = NULL;
     if(!PyArg_ParseTuple(args, "O", &arg0)) return NULL;
-    array = PyArray_FROM_OT(arg0, NPY_DOUBLE);
-    int ndims = PyArray_NDIM(array);
-    printf("%d",ndims);
+    amp_p_mat = PyArray_FROM_OT(arg0, NPY_DOUBLE);
+    int ndims = PyArray_NDIM(amp_p_mat);
+    printf("%d\n", ndims);
+    double test_prior = HWE_prior(1, 0.5);
+    printf("%f\n", test_prior);
+    Py_DECREF(amp_p_mat);
     Py_RETURN_NONE;
 }
+
 
 static PyMethodDef accel_module_methods[] = { 
     {   
