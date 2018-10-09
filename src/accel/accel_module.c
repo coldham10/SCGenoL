@@ -6,12 +6,14 @@ static PyObject* accel_module_posteriors(PyObject* self, PyObject* args) {
     //ref_base, read_string, qual_list, amp_p_mat, p_ado, f_0
     PyObject* arg0=NULL; //, arg1=NULL, arg2=NULL, arg3=NULL, arg4=NULL;
     char ref_base = '\0';
+    const char* read_string;
     PyObject* amp_p_mat = NULL;
-    if(!PyArg_ParseTuple(args, "BO", &ref_base, &arg0)) return NULL;
+    if(!PyArg_ParseTuple(args, "BsO", &ref_base, &read_string, &arg0)) return NULL;
     amp_p_mat = PyArray_FROM_OT(arg0, NPY_DOUBLE);
     int ndims = PyArray_NDIM(amp_p_mat);
     printf("%d\n", ndims);
     printf("%d\n", (int)ref_base);
+    printf("%s\n", read_string);
     Py_DECREF(amp_p_mat);
     Py_RETURN_NONE;
 }
