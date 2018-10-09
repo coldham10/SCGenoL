@@ -1,5 +1,4 @@
-#include <Python.h>
-#include <numpy/arrayobject.h>
+#include "accel_module.h"
 #include <math.h>
 
 static double HWE_prior(int g, double f_0) {
