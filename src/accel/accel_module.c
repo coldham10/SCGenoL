@@ -3,19 +3,21 @@
 
 
 static PyObject* accel_module_posteriors(PyObject* self, PyObject* args) {
-    //ref_base, read_string, qual_list, amp_p_mat, p_ado, f_0
-    //TODO its probably more efficient to read quals as string and convert in C to double
+    //ref_base, reads, quals, amp_p_mat, p_ado, f_0
     // OR perhaps have the quals as a 1d np array, the api seems easier
-    PyObject *arg0=NULL, *arg1=NULL;
+    PyObject *arg0  = NULL,  *arg1  = NULL,  *arg2      = NULL;
+    PyObject *reads = NULL,  *quals = NULL,  *amp_p_mat = NULL;
     const char ref_base = '\0';
-    const char* read_string;
-    PyObject* amp_p_mat = NULL;
-    if(!PyArg_ParseTuple(args, "BsOO", &ref_base, &read_string, &arg0, &arg1)) return NULL;
-    amp_p_mat = PyArray_FROM_OT(arg1, NPY_DOUBLE);
-    int ndims = PyArray_NDIM(amp_p_mat);
-    printf("%d\n", ndims);
-    printf("%d\n", (int)ref_base);
-    printf("%s\n", read_string);
+    const double p_ado = 0, f_0 = 0;
+
+    if(!PyArg_ParseTuple(args, "BOOOdd", &ref_base, &arg0, &arg1, &arg2, &p_ado, &f_0)) return NULL;
+
+    reads     = PyArray_FROM_OT(arg0, NPY_BYTE);
+    quals     = PyArray_FROM_OT(arg0, NPY_DOUBLE);
+    amp_p_mat = PyArray_FROM_OT(arg0, NPY_DOUBLE);
+
+    Py_DECREF(reads);
+    Py_DECREF(quals);
     Py_DECREF(amp_p_mat);
     Py_RETURN_NONE;
 }

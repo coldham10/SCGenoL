@@ -82,6 +82,7 @@ def reads_to_numeric(cell):
     cell.reads = [ pileup_dict[r] for r in cell.reads if r in pileup_dict ]
 
 def decode_quals(cell, qual_offset=33):
+    """Converts quality characters into a probability the read is correct"""
     phred = [ord(q)-qual_offset for q in cell.quals]
     p_correct = [1-np.exp(-q/10) for q in phred]
     cell.quals = p_correct

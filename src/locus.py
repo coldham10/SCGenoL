@@ -173,4 +173,5 @@ class Locus:
 
     def estimate_f0(self):
         #TODO: quick EM algorithm
+        # Should this be locus level or genome level?
         pass

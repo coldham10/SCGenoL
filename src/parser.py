@@ -26,8 +26,8 @@ class Pileup_file(Iterator):
             line = self.infile.readline()
             line = line.replace('\n','')
             line = line.split('\t')
-            chrom   = line[0]
-            coord   = line[1]
+            chrom    = line[0]
+            coord    = line[1]
             ref_base = line[2]
             sample_specific_data = line[3:]
         except IndexError:
