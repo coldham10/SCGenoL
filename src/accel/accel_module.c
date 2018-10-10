@@ -4,12 +4,14 @@
 
 static PyObject* accel_module_posteriors(PyObject* self, PyObject* args) {
     //ref_base, read_string, qual_list, amp_p_mat, p_ado, f_0
-    PyObject* arg0=NULL; //, arg1=NULL, arg2=NULL, arg3=NULL, arg4=NULL;
-    char ref_base = '\0';
+    //TODO its probably more efficient to read quals as string and convert in C to double
+    // OR perhaps have the quals as a 1d np array, the api seems easier
+    PyObject *arg0=NULL, *arg1=NULL;
+    const char ref_base = '\0';
     const char* read_string;
     PyObject* amp_p_mat = NULL;
-    if(!PyArg_ParseTuple(args, "BsO", &ref_base, &read_string, &arg0)) return NULL;
-    amp_p_mat = PyArray_FROM_OT(arg0, NPY_DOUBLE);
+    if(!PyArg_ParseTuple(args, "BsOO", &ref_base, &read_string, &arg0, &arg1)) return NULL;
+    amp_p_mat = PyArray_FROM_OT(arg1, NPY_DOUBLE);
     int ndims = PyArray_NDIM(amp_p_mat);
     printf("%d\n", ndims);
     printf("%d\n", (int)ref_base);
