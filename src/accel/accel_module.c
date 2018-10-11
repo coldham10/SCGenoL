@@ -16,12 +16,11 @@ static PyObject* accel_module_posteriors(PyObject* self, PyObject* args) {
     quals     = PyArray_FROM_OT(arg0, NPY_DOUBLE);
     amp_p_mat = PyArray_FROM_OT(arg0, NPY_DOUBLE);
 
+    //When multiple cells held as 2-D array, change to **
     char* read_data = (char*)PyArray_DATA(reads);
     npy_intp n_reads = *PyArray_DIMS(reads);
 
-    for (int i = 0; i < n_reads; i++) {
-        printf("%hhx", *(read_data+i));
-    }
+    //TODO manage threads here
 
     Py_DECREF(reads);
     Py_DECREF(quals);
@@ -45,7 +44,7 @@ static PyMethodDef accel_module_methods[] = {
         "posteriors",
         accel_module_posteriors,
         METH_VARARGS,
-        "Calculate posterior probabilities in parallel from a group of cell loci"
+        "Calculate posterior probabilities in parallel from a cell locus."
     },  
     {NULL, NULL, 0, NULL}
 };
