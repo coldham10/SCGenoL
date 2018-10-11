@@ -7,7 +7,7 @@ static PyObject* accel_module_posteriors(PyObject* self, PyObject* args) {
     // OR perhaps have the quals as a 1d np array, the api seems easier
     PyObject *arg0  = NULL,  *arg1  = NULL,  *arg2      = NULL;
     PyObject *reads = NULL,  *quals = NULL,  *amp_p_mat = NULL;
-    const char ref_base = '\0';
+    const char ref_base = 9;
     const double p_ado = 0, f_0 = 0;
 
     if(!PyArg_ParseTuple(args, "BOOOdd", &ref_base, &arg0, &arg1, &arg2, &p_ado, &f_0)) return NULL;
@@ -15,6 +15,13 @@ static PyObject* accel_module_posteriors(PyObject* self, PyObject* args) {
     reads     = PyArray_FROM_OT(arg0, NPY_BYTE);
     quals     = PyArray_FROM_OT(arg0, NPY_DOUBLE);
     amp_p_mat = PyArray_FROM_OT(arg0, NPY_DOUBLE);
+
+    char* read_data = (char*)PyArray_DATA(reads);
+    npy_intp n_reads = *PyArray_DIMS(reads);
+
+    for (int i = 0; i < n_reads; i++) {
+        printf("%hhx", *(read_data+i));
+    }
 
     Py_DECREF(reads);
     Py_DECREF(quals);
