@@ -29,10 +29,13 @@ class Pileup_file(Iterator):
             chrom    = line[0]
             coord    = line[1]
             ref_base = line[2]
-            sample_specific_data = line[3:]
+            read_depths = np.array(line[3::3])
+            reads = np.array([list(cell_reads) for cell_reads in line[4::3]])
+            quals = np.array([list(cell_quals) for cell_quals in line[5::3]])
+
         except IndexError:
             raise StopIteration
-        return Locus(chrom, coord, ref_base, sample_specific_data)
+        return Locus(chrom, coord, ref_base, read_depths, reads, quals)
 
 class Amplification_matrix:
     """Either generates or loads from file
