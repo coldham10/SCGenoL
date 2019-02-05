@@ -1,4 +1,4 @@
-# SCGenoL
+# SCGenoL (SNVite?)
 
 Note "amp_p_mat[g,h,x]", is the probability that x will be called by the sequencer given the underlying genotype is gh
 (ignoring allelic dropout events). Therefore amp_p_mat[g,g,g] should be very close to 1, amp_p_mat[g,h,g] should be 
@@ -8,8 +8,6 @@ or be calculated by the program where the above values are adjusted by some smal
 seq_p_mat implicitly does the 1/3 calculation in monovar for homozygous likelihoods, by definition.
 
 ##TODO
-multiprocessing: write C module for parallelizable, slow methods and implement POSIX threads. Followed tutorial at adam's blog
-input pipeline script, creating pileup file and RECALIBRATING(?) base scores
 Assumes phred33, maybe include option for phred64
 handle indels
 handle CNVs
@@ -22,3 +20,13 @@ EM algorithm with neighbour joining tree(by hamming distance?): EM params: (ado 
 for germline data, if homozygous update reference(?), if heterozygous include germline_SNV info
 Q: build tree using posterior probabilities? update priors in a phylogeny aware way, i.e. use 'parent' as reference? perhaps do BFS where posterior of parent * p(child is descendant) = prior of child
 If using neighbour joining, all cells are considered leaves and all non-leaf nodes have unknown genotypes. These genotypes could be considered latent variables for an EM algorithm, and (once neighbour joined) maximised using the genotype likelihoods of the cells. Potentially problematic as not truly EM: the neighbour joining is not maximising likelihood(?).
+
+## 2019 update ##
+
+Multiprocessing to be done using python package multiprocessing
+Python packages numpy and pysam should be leveraged amap
+Call variant sites first to reduce complexity - build tree using variant sites only (DP algorithm in monovar)
+Metric for neighbour joining: Jukes-Cantor? Read section 8 of BSA
+Impute welltype (VCF or cell consensus)
+
+
