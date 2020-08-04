@@ -1,5 +1,9 @@
 # SCGenoL
 
+
+This was an early research project that eventually became the [SCarborSNV](https://github.com/coldham10/SCarborSNV) single-cell phylogeny aware SNV inference program.
+
+
 Note "amp_p_mat[g,h,x]", is the probability that x will be called by the sequencer given the underlying genotype is gh
 (ignoring allelic dropout events). Therefore amp_p_mat[g,g,g] should be very close to 1, amp_p_mat[g,h,g] should be 
 very close to 0.5 and amp_p_mat[g,h,i] should be just above or exactly zero. These could come from an empirical source
